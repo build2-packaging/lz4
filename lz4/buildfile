@@ -8,6 +8,6 @@ lib{lz4}: lib/{c h}{lz4 lz4hc lz4frame} $xxhash
 
 if ($c.target.class == 'windows')
 {
-    {hbmis objs}{lz4}: c.poptions += "-DLZ4_DLL_EXPORT"
+    {hbmis objs}{*}: c.poptions += "-DLZ4_DLL_EXPORT"
     libs{lz4}: cc.export.poptions += "-DLZ4_DLL_IMPORT"
 }
