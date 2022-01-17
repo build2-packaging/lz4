@@ -1,6 +1,6 @@
 import xxhash = xxhash%lib{xxhash}
 
-lib{lz4}: lib/{c h}{lz4 lz4hc lz4frame} $xxhash
+./: lib{lz4}: lib/{c h}{lz4 lz4hc lz4frame} $xxhash
 {
     cc.export.poptions = "-I$src_base/lib"
     cc.export.libs = $xxhash
@@ -11,3 +11,8 @@ if ($c.target.class == 'windows')
     {hbmis objs}{*}: c.poptions += "-DLZ4_DLL_EXPORT"
     libs{lz4}: cc.export.poptions += "-DLZ4_DLL_IMPORT"
 }
+
+c.poptions += "-DBUILD2_LZ4_VERSION=\"$version\"" "-I$src_base/programs"
+libue{lz4}: programs/h{bench datagen lz4io platform util} programs/c{bench datagen lz4io} programs/file{lz4cli.c} lib{lz4}
+./: exe{lz4}: libue{lz4} c{lz4cli_lz4}
+./: exe{lz4c}: libue{lz4} c{lz4cli_lz4c}
