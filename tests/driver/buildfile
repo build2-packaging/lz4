@@ -1,4 +1,4 @@
-import libs = lz4%lib{lz4}
+import libs = lz4%liba{lz4}
 
 ./: exe{fuzzer}: c{fuzzer} h{util platform} $libs
 exe{fuzzer}: test.options = '-i2048'
