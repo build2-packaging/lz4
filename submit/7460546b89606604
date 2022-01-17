@@ -1,0 +1,5 @@
+: 1
+name: lz4
+version: 1.9.3
+summary: Extremely Fast Compression algorithm
+license: BSD-2-Clause
