@@ -2,8 +2,8 @@ import libs  = lz4%lib{lz4}
 import libs += lz4%lib{lz4hc}
 import libs += lz4%lib{lz4frame}
 
-./: exe{fuzzer}: c{fuzzer} $libs
+./: exe{fuzzer}: c{fuzzer} h{util platform} $libs
 exe{fuzzer}: test.options = '-i2048'
 
-./: exe{frametest}: c{frametest} $libs
+./: exe{frametest}: c{frametest} h{util platform} $libs
 exe{frametest}: test.options = '-i2048'
