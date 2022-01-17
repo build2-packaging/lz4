@@ -1,18 +1,13 @@
 import xxhash = xxhash%lib{xxhash}
 
-./: lib{lz4}: lib/{c h}{lz4}
+lib{lz4}: lib/{c h}{lz4 lz4hc lz4frame} $xxhash
 {
     cc.export.poptions = "-I$src_base/lib"
+    cc.export.libs = $xxhash
 }
 
-./: lib{lz4hc}: lib/{c h}{lz4hc} lib{lz4}
+if ($c.target.class == 'windows')
 {
-    cc.export.poptions = "-I$src_base/lib"
-    cc.export.libs = lib{lz4}
-}
-
-./: lib{lz4frame}: lib/{c h}{lz4frame} lib{lz4hc} $xxhash
-{
-    cc.export.poptions = "-I$src_base/lib"
-    cc.export.libs = lib{lz4hc} $xxhash
+    {hbmis objs}{lz4}: c.poptions += "-DLZ4_DLL_EXPORT"
+    libs{lz4}: cc.export.poptions += "-DLZ4_DLL_IMPORT"
 }
