@@ -1,0 +1,14 @@
+: 1
+name: lz4
+version: 1.9.3-a.0.z
+summary: Extremely Fast Compression algorithm
+license: BSD-2-Clause
+description-file: upstream/README.md
+url: https://lz4.github.io/lz4/
+src-url: https://github.com/lz4/lz4
+doc-url: https://github.com/lz4/lz4/wiki
+
+depends: * build2 >= 0.14.0
+depends: * bpkg >= 0.14.0
+
+depends: xxhash ^0.8.1
