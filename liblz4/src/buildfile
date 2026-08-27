@@ -1,0 +1,43 @@
+intf_libs = # Interface dependencies.
+impl_libs = # Implementation dependencies.
+#import xxxx_libs += libhello%lib{hello}
+
+lib{lz4}: {h c}{**} $impl_libs $intf_libs
+
+# Build options.
+#
+out_pfx = [dir_path] $out_root/src/
+src_pfx = [dir_path] $src_root/src/
+
+c.poptions =+ "-I$out_pfx" "-I$src_pfx"
+
+#obja{*}: c.poptions += -DLIB_STATIC_BUILD
+#objs{*}: c.poptions += -DLIB_SHARED_BUILD
+
+# Export options.
+#
+lib{lz4}:
+{
+  c.export.poptions = "-I$out_pfx" "-I$src_pfx"
+  c.export.libs = $intf_libs
+}
+
+#liba{lz4}: c.export.poptions += -DLIB_STATIC
+#libs{lz4}: c.export.poptions += -DLIB_SHARED
+
+# For pre-releases use the complete version to make sure they cannot
+# be used in place of another pre-release or the final version. See
+# the version module for details on the version.* variable values.
+#
+if $version.pre_release
+  lib{lz4}: bin.lib.version = "-$version.project_id"
+else
+  lib{lz4}: bin.lib.version = "-$version.major.$version.minor"
+
+# Install recreating subdirectories.
+#
+h{*}:
+{
+  install         = include/
+  install.subdirs = true
+}

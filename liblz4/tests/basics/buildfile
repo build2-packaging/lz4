@@ -1,0 +1,3 @@
+import libs = liblz4%lib{lz4}
+
+exe{driver}: {h c}{**} $libs testscript{**}
