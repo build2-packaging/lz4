@@ -1,16 +1,19 @@
 : 1
 name: liblz4
-version: 0.1.0-a.0.z
+version: 1.10.0-a.0.z
 language: c
 project: lz4
-summary: lz4 C library
-license: other: proprietary ; Not free/open source.
+summary: LZ4 lossless compression C library
+license: BSD-2-Clause
+topics: compression, lz4
 description-file: README.md
 package-description-file: PACKAGE-README.md
 changes-file: NEWS
-url: https://example.org/upstream
-email: upstream@example.org
+url: https://lz4.github.io/lz4/
+doc-url: https://github.com/lz4/lz4/wiki
+src-url: https://github.com/lz4/lz4
 package-url: https://github.com/build2-packaging/lz4
 package-email: packaging@build2.org ; Mailing list.
 depends: * build2 >= 0.18.0
 depends: * bpkg >= 0.18.0
+depends: xxhash ^0.8.1

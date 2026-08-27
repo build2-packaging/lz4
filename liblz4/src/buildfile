@@ -1,43 +1,63 @@
 intf_libs = # Interface dependencies.
 impl_libs = # Implementation dependencies.
-#import xxxx_libs += libhello%lib{hello}
+import impl_libs += xxhash%lib{xxhash}
 
-lib{lz4}: {h c}{**} $impl_libs $intf_libs
+# Use the unbundled xxhash package rather than lib/xxhash.{c,h}.
+#
+lib{lz4}: lib/{h c}{* -xxhash} $impl_libs $intf_libs
 
 # Build options.
 #
 out_pfx = [dir_path] $out_root/src/
 src_pfx = [dir_path] $src_root/src/
 
-c.poptions =+ "-I$out_pfx" "-I$src_pfx"
+# Public headers live in lib/ and are included as <lz4.h>.
+#
+c.poptions =+ "-I$out_pfx/lib" "-I$src_pfx/lib"
+
+# Publish static-linking-only APIs so the CLI can use
+# LZ4_STATIC_LINKING_ONLY / LZ4F_STATIC_LINKING_ONLY with the shared
+# library (upstream lz4-wlib).
+#
+c.poptions += -DLZ4_PUBLISH_STATIC_FUNCTIONS -DLZ4F_PUBLISH_STATIC_FUNCTIONS
 
 #obja{*}: c.poptions += -DLIB_STATIC_BUILD
 #objs{*}: c.poptions += -DLIB_SHARED_BUILD
+
+if ($c.target.class == 'windows')
+  lib/objs{*}: c.poptions += -DLZ4_DLL_EXPORT=1
 
 # Export options.
 #
 lib{lz4}:
 {
-  c.export.poptions = "-I$out_pfx" "-I$src_pfx"
+  c.export.poptions = "-I$out_pfx/lib" "-I$src_pfx/lib"
   c.export.libs = $intf_libs
 }
 
 #liba{lz4}: c.export.poptions += -DLIB_STATIC
 #libs{lz4}: c.export.poptions += -DLIB_SHARED
 
+if ($c.target.class == 'windows')
+  libs{lz4}: c.export.poptions += -DLZ4_DLL_IMPORT=1
+
 # For pre-releases use the complete version to make sure they cannot
 # be used in place of another pre-release or the final version. See
 # the version module for details on the version.* variable values.
 #
+# Upstream SONAME is liblz4.so.1 with real name liblz4.so.MAJOR.MINOR.PATCH.
+#
 if $version.pre_release
-  lib{lz4}: bin.lib.version = "-$version.project_id"
+  lib{lz4}: bin.lib.version = "-$version.project_id" \
+                              linux@"$version.major.$version.minor.$version.patch"
 else
-  lib{lz4}: bin.lib.version = "-$version.major.$version.minor"
+  lib{lz4}: bin.lib.version = "-$version.major.$version.minor" \
+                              linux@"$version.major.$version.minor.$version.patch"
 
-# Install recreating subdirectories.
+# Only install public headers, directly into include/.
 #
 h{*}:
 {
   install         = include/
-  install.subdirs = true
+  install.subdirs = false
 }
