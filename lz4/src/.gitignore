@@ -1,4 +1,7 @@
 lz4
+lz4c
+lz4cat
+unlz4
 
 # Testscript output directory (can be symlink).
 #

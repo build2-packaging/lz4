@@ -1,0 +1,7 @@
+#undef HAVE_PTHREAD
+
+#ifdef HAVE_PTHREAD
+#  define HAVE_PTHREAD_ENABLED true
+#else
+#  define HAVE_PTHREAD_ENABLED false
+#endif

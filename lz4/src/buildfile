@@ -1,9 +1,85 @@
-libs =
-#import libs += libhello%lib{hello}
+using autoconf
 
-exe{lz4}: {h c}{**} $libs programs/testscript
+import libs = liblz4%lib{lz4} \
+              xxhash%lib{xxhash}
+
+# Upstream enables CLI multithreading when pthread exists (POSIX) or when
+# Win32 IOCP is available (lz4conf.h, via _WIN32). Probe the former with
+# the HAVE_PTHREAD builtin and source it for poptions/libs.
+#
+h{have-pthread}: in{have-pthread}
+{
+  install = false
+}
+
+[rule_hint=c.predefs] buildfile{have-pthread}: h{have-pthread}
+{
+  c.predefs.poptions = false
+  c.predefs.macros = HAVE_PTHREAD_ENABLED@have_pthread
+}
+
+./: exe{lz4}: {h c}{** -programs/lz4cli -have-pthread} $libs testscript
+./: buildfile{have-pthread}
+
+# Included in lz4cli-build2.c.
+#
+exe{lz4}: programs/c{lz4cli}: include = adhoc
+
+have_pthread = false
+if ($build.meta_operation == 'perform')
+{
+  update buildfile{have-pthread}
+  source $path(buildfile{have-pthread})
+}
 
 out_pfx = [dir_path] $out_root/src/
 src_pfx = [dir_path] $src_root/src/
 
-c.poptions =+ "-I$out_pfx" "-I$src_pfx"
+c.poptions =+ "-I$out_pfx" "-I$src_pfx" \
+              "-I$out_pfx/programs" "-I$src_pfx/programs"
+
+if $have_pthread
+{
+  c.poptions += -DLZ4IO_MULTITHREAD
+  c.libs += -pthread
+}
+
+# bench.c / lz4io.c define LZ4*_STATIC_LINKING_ONLY while linking the shared
+# library (LZ4_DLL_IMPORT). The static-section declarations must also be
+# dllimport, matching how liblz4 is built.
+#
+c.poptions += -DLZ4_PUBLISH_STATIC_FUNCTIONS -DLZ4F_PUBLISH_STATIC_FUNCTIONS
+
+obj{lz4cli-build2}: c.poptions += "-DBUILD2_LZ4_VERSION=\"$version\""
+
+# Target metadata, see also --build2-metadata in lz4cli-build2.c.
+#
+# LZ4_CLEVEL and LZ4_NBWORKERS affect default compression, not --version.
+#
+exe{lz4}:
+{
+  export.metadata = 1 lz4
+  lz4.name = [string] lz4
+  lz4.version = [string] $version
+  lz4.checksum = [string] $version
+  lz4.environment = [strings] LZ4_CLEVEL LZ4_NBWORKERS
+}
+
+# Additional command names, same binary (upstream Makefile).
+#
+for n: lz4c lz4cat unlz4
+{
+  ./: exe{$n}: exe{lz4}
+  {{
+    diag ln $>
+    rm -f $path($>)
+    ln -s $path.leaf($path($<)) $path($>)
+    touch --after $path($<) $path($>)
+  }}
+
+  exe{$n}:
+  {
+    dist = false
+    test = false
+  }
+}

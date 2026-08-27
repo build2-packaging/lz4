@@ -1,1 +1,1 @@
-./: {*/ -build/} doc{README.md PACKAGE-README.md NEWS} legal{COPYING} manifest
+./: {*/ -build/} man1{lz4} doc{README.md PACKAGE-README.md NEWS} legal{COPYING} manifest

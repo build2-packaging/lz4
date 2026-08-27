@@ -1,9 +1,12 @@
-# lz4 - An executable
+# lz4 - LZ4 lossless compression command line utility
 
-This is a `build2` package for the [`<UPSTREAM-NAME>`](https://<UPSTREAM-URL>)
-executable. It is a <SUMMARY-OF-FUNCTIONALITY>.
+This is a `build2` package for the [`lz4`](https://github.com/lz4/lz4)
+executable. It is a command line interface for the LZ4 lossless compression
+algorithm.
 
 Note that the `lz4` executable in this package provides `build2` metadata.
+Upstream command names `lz4c`, `lz4cat`, and `unlz4` are installed as links
+to the same binary.
 
 
 ## Usage
@@ -13,13 +16,13 @@ To start using `lz4` in your project, add the following build-time
 appropriate:
 
 ```
-depends: * lz4 ^<VERSION>
+depends: * lz4 ^1.10.0
 ```
 
 Then import the executable in your `buildfile`:
 
 ```
-import! [metadata] <TARGET> = lz4%exe{<TARGET>}
+import! [metadata] lz4 = lz4%exe{lz4}
 ```
 
 
@@ -28,18 +31,13 @@ import! [metadata] <TARGET> = lz4%exe{<TARGET>}
 This package provides the following importable targets:
 
 ```
-exe{<TARGET>}
+exe{lz4}
 ```
 
-<DESCRIPTION-OF-IMPORTABLE-TARGETS>
+This is the LZ4 command line utility. Legacy `lz4c` mode is selected from
+the executable file name.
 
 
 ## Configuration variables
 
-This package provides the following configuration variables:
-
-```
-[bool] config.lz4.<VARIABLE> ?= false
-```
-
-<DESCRIPTION-OF-CONFIG-VARIABLES>
+This package provides no configuration variables.
