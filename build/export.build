@@ -1,6 +1,0 @@
-$out_root/
-{
-  include lz4/
-}
-
-export $out_root/lz4/$import.target

@@ -1,7 +1,0 @@
-project = lz4
-
-using version
-using config
-using test
-using install
-using dist
