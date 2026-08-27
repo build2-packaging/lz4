@@ -1,2 +1,5 @@
 : 1
 location: liblz4/
+
+:
+location: lz4/

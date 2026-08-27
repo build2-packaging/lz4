@@ -1,0 +1,5 @@
+lz4
+
+# Testscript output directory (can be symlink).
+#
+test-lz4
