@@ -1,0 +1,11 @@
+using c
+
+# Import our own exe{lz4} to exercise the importation as well as the tool
+# itself (see also build/export.build, which this import requires).
+#
+import t = lz4%exe{lz4}
+testscript{*}: test = $t
+
+# The test target for cross-testing (running tests under Wine, etc).
+#
+test.target = $c.target

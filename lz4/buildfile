@@ -1,1 +1,5 @@
 ./: {*/ -build/} man1{lz4} doc{README.md PACKAGE-README.md NEWS} legal{COPYING} manifest
+
+# Don't install tests.
+#
+tests/: install = false

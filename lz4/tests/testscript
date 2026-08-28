@@ -1,0 +1,19 @@
+: version
+:
+$* --version >>~"/EOO/"
+/.*$(version.major)\.$(version.minor)\.$(version.patch).*/
+EOO
+
+: roundtrip
+:
+{
+  cat <<EOI >=input
+  LZ4 compression smoke test payload
+  EOI
+
+  $* -q -f input input.lz4 &input.lz4
+
+  $* -q -f -d input.lz4 output &output
+
+  diff input output
+}
