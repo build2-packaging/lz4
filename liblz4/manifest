@@ -1,6 +1,6 @@
 : 1
 name: liblz4
-version: 1.10.0-a.0.z
+version: 1.10.0
 language: c
 project: lz4
 summary: LZ4 lossless compression C library
