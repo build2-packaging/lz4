@@ -1,0 +1,7 @@
+: 1
+name: lz4
+version: 1.10.0
+language: c
+project: lz4
+summary: LZ4 lossless compression command line utility
+license: GPL-2.0-or-later

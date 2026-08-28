@@ -1,0 +1,7 @@
+: 1
+name: liblz4
+version: 1.10.0
+language: c
+project: lz4
+summary: LZ4 lossless compression C library
+license: BSD-2-Clause
